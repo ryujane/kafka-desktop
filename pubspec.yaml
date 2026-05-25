@@ -25,6 +25,8 @@ dependencies:
   collection: ^1.19.1
   hooks: ^2.0.0
   code_assets: ^1.1.0
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +38,7 @@ dev_dependencies:
   test: ^1.25.15
 
 flutter:
+  generate: true
   uses-material-design: true
 
 ffigen:

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_extension.dart';
+import 'l10n/app_localizations.dart';
 import 'presentation/providers/settings_providers.dart';
 import 'presentation/routes/app_router.dart';
 
@@ -15,6 +17,13 @@ class KafkaXApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'KafkaX',
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.supportedLocales,
       theme: AppTheme.light().copyWith(
         extensions: const [
           KafkaXColors(

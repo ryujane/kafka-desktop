@@ -18,8 +18,11 @@ Future<SharedPreferences> sharedPreferences(Ref ref) =>
 /// Provides the [ConnectionRepository] instance.
 @Riverpod(keepAlive: true)
 ConnectionRepository connectionRepository(Ref ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).requireValue;
-  return ConnectionRepository(prefs);
+  final asyncPrefs = ref.watch(sharedPreferencesProvider);
+  if (!asyncPrefs.hasValue) {
+    throw Exception('SharedPreferences not ready');
+  }
+  return ConnectionRepository(asyncPrefs.requireValue);
 }
 
 /// Provides the [FfiIsolateManager] singleton.

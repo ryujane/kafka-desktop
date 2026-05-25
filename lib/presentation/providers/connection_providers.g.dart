@@ -105,7 +105,7 @@ final class ConnectionRepositoryProvider
 }
 
 String _$connectionRepositoryHash() =>
-    r'e0e6b0bbbe87f52234be5d2388cec5406d0f8375';
+    r'8c54e42d8d09f157a703d6a45f811c1e3a8704df';
 
 /// Provides the [FfiIsolateManager] singleton.
 

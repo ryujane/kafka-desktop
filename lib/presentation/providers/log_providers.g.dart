@@ -56,4 +56,4 @@ final class AppLogProvider
   }
 }
 
-String _$appLogHash() => r'22a84e57b648ad4dd1b51b9d2b02bf2086e9112d';
+String _$appLogHash() => r'058b7d31e08a401c704f722aa06fd8278646234d';

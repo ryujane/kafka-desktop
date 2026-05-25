@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:kafkax/data/models/log_entry.dart';
@@ -10,26 +12,37 @@ part 'log_providers.g.dart';
 ///
 /// Converts raw [LogEvent] responses into [LogEntry] domain objects.
 @Riverpod(keepAlive: true)
-Stream<List<LogEntry>> appLog(Ref ref) async* {
+Stream<List<LogEntry>> appLog(Ref ref) {
   final isolateManager = ref.watch(ffiIsolateManagerProvider);
   final logs = <LogEntry>[];
 
-  yield List.unmodifiable(logs);
+  final controller = StreamController<List<LogEntry>>();
+  controller.add(List.unmodifiable(logs));
 
-  await for (final response in isolateManager.responses) {
-    if (response is LogEvent) {
-      logs.add(
-        LogEntry(
-          timestamp: DateTime.now(),
-          level: _parseLevel(response.level),
-          connectionId: response.connectionId,
-          message: response.message,
-          metadata: response.metadata,
-        ),
-      );
-      yield List.unmodifiable(logs);
-    }
-  }
+  final sub = isolateManager.responses
+      .where((r) => r is LogEvent)
+      .cast<LogEvent>()
+      .listen((event) {
+        logs.add(
+          LogEntry(
+            timestamp: DateTime.now(),
+            level: _parseLevel(event.level),
+            connectionId: event.connectionId,
+            message: event.message,
+            metadata: event.metadata,
+          ),
+        );
+        if (!controller.isClosed) {
+          controller.add(List.unmodifiable(logs));
+        }
+      });
+
+  ref.onDispose(() {
+    sub.cancel();
+    controller.close();
+  });
+
+  return controller.stream;
 }
 
 LogLevel _parseLevel(String level) => switch (level.toLowerCase()) {

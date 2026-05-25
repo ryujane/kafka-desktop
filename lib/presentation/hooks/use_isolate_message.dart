@@ -1,7 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'package:kafkax/ffi/lib/src/isolate/ffi_isolate.dart';
-import 'package:kafkax/ffi/lib/src/isolate/ffi_messages.dart';
+import 'package:kafkax/ffi/isolate/ffi_isolate.dart';
+import 'package:kafkax/ffi/isolate/ffi_messages.dart';
 
 /// Hook that listens to a specific response type [T] from the FFI isolate.
 ///

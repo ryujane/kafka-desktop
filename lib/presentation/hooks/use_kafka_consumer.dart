@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:kafkax/data/models/kafka_message.dart';
-import 'package:kafkax/ffi/lib/src/isolate/ffi_isolate.dart';
-import 'package:kafkax/ffi/lib/src/isolate/ffi_messages.dart';
+import 'package:kafkax/ffi/isolate/ffi_isolate.dart';
+import 'package:kafkax/ffi/isolate/ffi_messages.dart';
 
 /// Hook that manages a Kafka consumer subscription lifecycle.
 ///

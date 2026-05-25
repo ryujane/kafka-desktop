@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:kafkax/data/models/connection_config.dart';
 import 'package:kafkax/data/repositories/connection_repository.dart';
-import 'package:kafkax/ffi/lib/src/isolate/ffi_isolate.dart';
-import 'package:kafkax/ffi/lib/src/isolate/ffi_messages.dart';
+import 'package:kafkax/ffi/isolate/ffi_isolate.dart';
+import 'package:kafkax/ffi/isolate/ffi_messages.dart';
 
 /// Manages multiple Kafka connection lifecycles.
 ///

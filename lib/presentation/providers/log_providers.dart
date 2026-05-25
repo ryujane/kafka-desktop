@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:kafkax/data/models/log_entry.dart';
-import 'package:kafkax/ffi/lib/src/isolate/ffi_messages.dart';
+import 'package:kafkax/ffi/isolate/ffi_messages.dart';
 import 'connection_providers.dart';
 
 part 'log_providers.g.dart';

@@ -40,7 +40,7 @@ flutter:
 ffigen:
   name: LibRdKafka
   description: Bindings to librdkafka
-  output: 'lib/ffi/lib/src/bindings/rd_kafka.dart'
+  output: 'lib/ffi/bindings/rd_kafka.dart'
   ffi-native:
     asset-id: 'package:kafkax/kafkax_ffi.dart'
   silence-enum-warning: true

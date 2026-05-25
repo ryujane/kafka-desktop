@@ -13,7 +13,7 @@ class ConnectRequest extends FfiRequest {
   final Map<String, String> properties;
 
   ConnectRequest({
-    required super.connectionId,
+    required String connectionId,
     required this.brokers,
     this.authType,
     this.username,
@@ -21,15 +21,15 @@ class ConnectRequest extends FfiRequest {
     this.tlsEnabled = false,
     this.caCertPath,
     this.properties = const {},
-  });
+  }) : super(connectionId);
 }
 
 class DisconnectRequest extends FfiRequest {
-  DisconnectRequest(super.connectionId);
+  DisconnectRequest(String connectionId) : super(connectionId);
 }
 
 class ListTopicsRequest extends FfiRequest {
-  ListTopicsRequest(super.connectionId);
+  ListTopicsRequest(String connectionId) : super(connectionId);
 }
 
 class CreateTopicRequest extends FfiRequest {
@@ -39,17 +39,18 @@ class CreateTopicRequest extends FfiRequest {
   final Map<String, String> config;
 
   CreateTopicRequest({
-    required super.connectionId,
+    required String connectionId,
     required this.name,
     required this.partitions,
     required this.replicationFactor,
     this.config = const {},
-  });
+  }) : super(connectionId);
 }
 
 class DeleteTopicRequest extends FfiRequest {
   final String topicName;
-  DeleteTopicRequest({required super.connectionId, required this.topicName});
+  DeleteTopicRequest({required String connectionId, required this.topicName})
+    : super(connectionId);
 }
 
 class ConsumeRequest extends FfiRequest {
@@ -59,16 +60,16 @@ class ConsumeRequest extends FfiRequest {
   final int maxMessages;
 
   ConsumeRequest({
-    required super.connectionId,
+    required String connectionId,
     required this.topic,
     this.partition,
     this.offset,
     this.maxMessages = 500,
-  });
+  }) : super(connectionId);
 }
 
 class StopConsumeRequest extends FfiRequest {
-  StopConsumeRequest(super.connectionId);
+  StopConsumeRequest(String connectionId) : super(connectionId);
 }
 
 class ProduceRequest extends FfiRequest {
@@ -79,17 +80,17 @@ class ProduceRequest extends FfiRequest {
   final Map<String, List<int>>? headers;
 
   ProduceRequest({
-    required super.connectionId,
+    required String connectionId,
     required this.topic,
     required this.value,
     this.key,
     this.partition,
     this.headers,
-  });
+  }) : super(connectionId);
 }
 
 class ListGroupsRequest extends FfiRequest {
-  ListGroupsRequest(super.connectionId);
+  ListGroupsRequest(String connectionId) : super(connectionId);
 }
 
 class ResetOffsetsRequest extends FfiRequest {
@@ -98,11 +99,11 @@ class ResetOffsetsRequest extends FfiRequest {
   final int offset;
 
   ResetOffsetsRequest({
-    required super.connectionId,
+    required String connectionId,
     required this.groupId,
     required this.topicName,
     required this.offset,
-  });
+  }) : super(connectionId);
 }
 
 sealed class FfiResponse {
@@ -114,40 +115,42 @@ class ConnectResponse extends FfiResponse {
   final bool success;
   final String? error;
   ConnectResponse({
-    required super.connectionId,
+    required String connectionId,
     required this.success,
     this.error,
-  });
+  }) : super(connectionId);
 }
 
 class DisconnectResponse extends FfiResponse {
   final bool success;
-  DisconnectResponse({required super.connectionId, required this.success});
+  DisconnectResponse({required String connectionId, required this.success})
+    : super(connectionId);
 }
 
 class TopicListResponse extends FfiResponse {
   final List<Map<String, dynamic>> topics;
-  TopicListResponse({required super.connectionId, required this.topics});
+  TopicListResponse({required String connectionId, required this.topics})
+    : super(connectionId);
 }
 
 class TopicActionResponse extends FfiResponse {
   final bool success;
   final String? error;
   TopicActionResponse({
-    required super.connectionId,
+    required String connectionId,
     required this.success,
     this.error,
-  });
+  }) : super(connectionId);
 }
 
 class MessageEvent extends FfiResponse {
   final List<Map<String, dynamic>> messages;
   final bool eof;
   MessageEvent({
-    required super.connectionId,
+    required String connectionId,
     required this.messages,
     this.eof = false,
-  });
+  }) : super(connectionId);
 }
 
 class ProduceResponse extends FfiResponse {
@@ -156,27 +159,28 @@ class ProduceResponse extends FfiResponse {
   final int? offset;
   final String? error;
   ProduceResponse({
-    required super.connectionId,
+    required String connectionId,
     required this.success,
     this.partition,
     this.offset,
     this.error,
-  });
+  }) : super(connectionId);
 }
 
 class GroupListResponse extends FfiResponse {
   final List<Map<String, dynamic>> groups;
-  GroupListResponse({required super.connectionId, required this.groups});
+  GroupListResponse({required String connectionId, required this.groups})
+    : super(connectionId);
 }
 
 class OffsetResetResponse extends FfiResponse {
   final bool success;
   final String? error;
   OffsetResetResponse({
-    required super.connectionId,
+    required String connectionId,
     required this.success,
     this.error,
-  });
+  }) : super(connectionId);
 }
 
 class LogEvent extends FfiResponse {
@@ -184,19 +188,19 @@ class LogEvent extends FfiResponse {
   final String message;
   final Map<String, dynamic>? metadata;
   LogEvent({
-    required super.connectionId,
+    required String connectionId,
     required this.level,
     required this.message,
     this.metadata,
-  });
+  }) : super(connectionId);
 }
 
 class MetadataResponse extends FfiResponse {
   final List<Map<String, dynamic>> brokers;
   final List<Map<String, dynamic>> topics;
   MetadataResponse({
-    required super.connectionId,
+    required String connectionId,
     required this.brokers,
     required this.topics,
-  });
+  }) : super(connectionId);
 }

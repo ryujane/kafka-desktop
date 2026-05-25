@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/data/models/connection_config.dart';
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/connection_providers.dart';
 
 /// Home screen showing KafkaX branding and saved connections.
@@ -11,6 +12,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     final connectionsAsync = ref.watch(connectionListProvider);
 
@@ -32,7 +34,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'KafkaX',
+                  s.appName,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
@@ -40,7 +42,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'A full-featured Kafka desktop client.',
+                  s.homeTitle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -53,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
                     // TODO: Open add connection dialog.
                   },
                   icon: const Icon(Icons.add),
-                  label: const Text('Add Connection'),
+                  label: Text(s.homeAddConnection),
                 ),
                 const SizedBox(height: 24),
                 // Saved connections list.
@@ -61,7 +63,7 @@ class HomeScreen extends ConsumerWidget {
                   data: (connections) {
                     if (connections.isEmpty) {
                       return Text(
-                        'No saved connections yet.',
+                        s.homeNoConnections,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(
@@ -74,7 +76,7 @@ class HomeScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Saved Connections',
+                          s.settingsTitle,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -89,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Text(
-                    'Error: $e',
+                    '${s.error}: $e',
                     style: TextStyle(color: theme.colorScheme.error),
                   ),
                 ),
@@ -110,6 +112,7 @@ class _ConnectionTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     final activeAsync = ref.watch(activeConnectionProvider);
     final isActive = activeAsync.value?.id == connection.id;
@@ -136,7 +139,7 @@ class _ConnectionTile extends ConsumerWidget {
                     context.go('/cluster/${connection.id}');
                   }
                 },
-                child: const Text('Connect'),
+                child: Text(s.connectionConnect),
               ),
             if (isActive)
               TextButton(
@@ -145,28 +148,28 @@ class _ConnectionTile extends ConsumerWidget {
                       .read(activeConnectionProvider.notifier)
                       .disconnect();
                 },
-                child: const Text('Disconnect'),
+                child: Text(s.connectionDisconnect),
               ),
             IconButton(
               icon: const Icon(Icons.delete_outline, size: 18),
-              tooltip: 'Delete connection',
+              tooltip: s.connectionDelete,
               onPressed: () async {
                 final confirmed = await showDialog<bool>(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    title: const Text('Delete Connection'),
+                    title: Text(s.connectionDelete),
                     content: Text(
                       'Are you sure you want to delete "${connection.name}"?',
                     ),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(ctx).pop(false),
-                        child: const Text('Cancel'),
+                        child: Text(s.cancel),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(ctx).pop(true),
                         child: Text(
-                          'Delete',
+                          s.delete,
                           style: TextStyle(color: theme.colorScheme.error),
                         ),
                       ),

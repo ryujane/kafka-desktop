@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/core/theme/theme_extension.dart';
 import 'package:kafkax/data/models/log_entry.dart';
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/log_providers.dart';
 
 /// Collapsible log viewer panel displayed above the status bar.
@@ -61,6 +62,7 @@ class _LogPanelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return Container(
       height: 28,
@@ -68,7 +70,7 @@ class _LogPanelHeader extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Output',
+            s.logPanelTitle,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -84,7 +86,7 @@ class _LogPanelHeader extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.close, size: 14),
             onPressed: onClose,
-            tooltip: 'Close panel',
+            tooltip: s.close,
             constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
             padding: EdgeInsets.zero,
           ),
@@ -104,7 +106,7 @@ class _LogEntryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (logs.isEmpty) {
-      return const Center(child: Text('No log entries'));
+      return Center(child: Text(S.of(context)!.noData));
     }
 
     return ListView.builder(

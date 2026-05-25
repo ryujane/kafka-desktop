@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:kafkax/l10n/app_localizations.dart';
+
 /// Detailed view of a single topic with Messages, Config, and Metrics tabs.
 class TopicDetailScreen extends StatelessWidget {
   const TopicDetailScreen({
@@ -16,16 +18,18 @@ class TopicDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(topicName),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Messages'),
-              Tab(text: 'Config'),
-              Tab(text: 'Metrics'),
+              Tab(text: s.topicMessages),
+              Tab(text: s.topicConfig),
+              Tab(text: s.topicMetrics),
             ],
           ),
         ),
@@ -49,6 +53,7 @@ class _MessagesTabPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -57,7 +62,7 @@ class _MessagesTabPlaceholder extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'Messages for $topicName',
+                '${s.topicMessages}: $topicName',
                 style: theme.textTheme.titleMedium,
               ),
               const Spacer(),
@@ -65,7 +70,7 @@ class _MessagesTabPlaceholder extends StatelessWidget {
                 onPressed: () {
                   // TODO: Implement message consumption controls.
                 },
-                child: const Text('Start Consumer'),
+                child: Text(s.producerSend),
               ),
             ],
           ),
@@ -89,17 +94,18 @@ class _MessagesTabPlaceholder extends StatelessWidget {
 class _MessageDataTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return DataTable(
       headingTextStyle: theme.textTheme.labelMedium?.copyWith(
         fontWeight: FontWeight.bold,
       ),
-      columns: const [
-        DataColumn(label: Text('Offset')),
-        DataColumn(label: Text('Partition')),
-        DataColumn(label: Text('Key')),
-        DataColumn(label: Text('Value')),
-        DataColumn(label: Text('Timestamp')),
+      columns: [
+        DataColumn(label: Text(s.topicOffset)),
+        DataColumn(label: Text(s.topicPartitions)),
+        DataColumn(label: Text(s.topicKey)),
+        DataColumn(label: Text(s.topicValue)),
+        DataColumn(label: Text(s.topicTimestamp)),
       ],
       rows: const [],
     );
@@ -110,6 +116,7 @@ class _MessageDataTable extends StatelessWidget {
 class _ConfigTabPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return Center(
       child: Column(
@@ -117,10 +124,10 @@ class _ConfigTabPlaceholder extends StatelessWidget {
         children: [
           Icon(Icons.settings_outlined, size: 48, color: theme.disabledColor),
           const SizedBox(height: 16),
-          Text('Topic Configuration', style: theme.textTheme.titleMedium),
+          Text(s.topicConfig, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
-            'Key-value configuration entries will appear here.',
+            s.noData,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -135,6 +142,7 @@ class _ConfigTabPlaceholder extends StatelessWidget {
 class _MetricsTabPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return Center(
       child: Column(
@@ -142,10 +150,10 @@ class _MetricsTabPlaceholder extends StatelessWidget {
         children: [
           Icon(Icons.bar_chart_outlined, size: 48, color: theme.disabledColor),
           const SizedBox(height: 16),
-          Text('Topic Metrics', style: theme.textTheme.titleMedium),
+          Text(s.topicMetrics, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
-            'Charts and graphs will appear here.',
+            s.noData,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),

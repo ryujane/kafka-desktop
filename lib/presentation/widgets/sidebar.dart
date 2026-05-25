@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/data/models/connection_config.dart';
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/connection_providers.dart';
 
 /// Collapsible sidebar with connection selector and navigation links.
@@ -17,12 +18,13 @@ class Sidebar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final connectionsAsync = ref.watch(connectionListProvider);
     final activeAsync = ref.watch(activeConnectionProvider);
 
     return Column(
       children: [
-        _buildHeader(context),
+        _buildHeader(context, s),
         const Divider(height: 1),
         if (expanded) ...[
           _ConnectionSelector(
@@ -38,32 +40,32 @@ class Sidebar extends ConsumerWidget {
               children: [
                 if (expanded)
                   _NavSection(
-                    title: 'Development',
+                    title: s.sidebarDevelopment,
                     items: [
                       _NavItem(
                         icon: Icons.topic_outlined,
-                        label: 'Topics',
+                        label: s.sidebarTopics,
                         onTap: () => _navigateToTopics(context, activeAsync),
                       ),
                       _NavItem(
                         icon: Icons.group_outlined,
-                        label: 'Groups',
+                        label: s.sidebarGroups,
                         onTap: () => _navigateToGroups(context, activeAsync),
                       ),
                       _NavItem(
                         icon: Icons.send_outlined,
-                        label: 'Produce',
+                        label: s.sidebarProduce,
                         onTap: () => _navigateToProduce(context, activeAsync),
                       ),
                     ],
                   ),
                 if (expanded)
                   _NavSection(
-                    title: 'Admin',
+                    title: s.sidebarAdmin,
                     items: [
                       _NavItem(
                         icon: Icons.dns_outlined,
-                        label: 'Brokers',
+                        label: s.sidebarBrokers,
                         onTap: () => _navigateToCluster(context, activeAsync),
                       ),
                     ],
@@ -72,22 +74,22 @@ class Sidebar extends ConsumerWidget {
                   const SizedBox(height: 8),
                   _IconNavItem(
                     icon: Icons.topic_outlined,
-                    tooltip: 'Topics',
+                    tooltip: s.sidebarTopics,
                     onTap: () => _navigateToTopics(context, activeAsync),
                   ),
                   _IconNavItem(
                     icon: Icons.group_outlined,
-                    tooltip: 'Groups',
+                    tooltip: s.sidebarGroups,
                     onTap: () => _navigateToGroups(context, activeAsync),
                   ),
                   _IconNavItem(
                     icon: Icons.send_outlined,
-                    tooltip: 'Produce',
+                    tooltip: s.sidebarProduce,
                     onTap: () => _navigateToProduce(context, activeAsync),
                   ),
                   _IconNavItem(
                     icon: Icons.dns_outlined,
-                    tooltip: 'Brokers',
+                    tooltip: s.sidebarBrokers,
                     onTap: () => _navigateToCluster(context, activeAsync),
                   ),
                 ],
@@ -96,12 +98,12 @@ class Sidebar extends ConsumerWidget {
           ),
         ),
         const Divider(height: 1),
-        _buildSettingsButton(context),
+        _buildSettingsButton(context, s),
       ],
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, S s) {
     return SizedBox(
       height: 48,
       child: Padding(
@@ -116,7 +118,7 @@ class Sidebar extends ConsumerWidget {
             if (expanded) ...[
               const SizedBox(width: 8),
               Text(
-                'KafkaX',
+                s.appName,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -128,17 +130,17 @@ class Sidebar extends ConsumerWidget {
     );
   }
 
-  Widget _buildSettingsButton(BuildContext context) {
+  Widget _buildSettingsButton(BuildContext context, S s) {
     if (expanded) {
       return ListTile(
         leading: const Icon(Icons.settings_outlined),
-        title: const Text('Settings'),
+        title: Text(s.sidebarSettings),
         dense: true,
         onTap: () => context.go('/settings'),
       );
     }
     return Tooltip(
-      message: 'Settings',
+      message: s.sidebarSettings,
       child: IconButton(
         icon: const Icon(Icons.settings_outlined),
         onPressed: () => context.go('/settings'),
@@ -199,6 +201,7 @@ class _ConnectionSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final active = activeAsync.value;
     final theme = Theme.of(context);
 
@@ -208,7 +211,7 @@ class _ConnectionSelector extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: DropdownButton<String>(
             value: active?.id,
-            hint: const Text('Select connection'),
+            hint: Text(s.sidebarSelectCluster),
             isExpanded: true,
             underline: const SizedBox.shrink(),
             items: [
@@ -218,13 +221,13 @@ class _ConnectionSelector extends ConsumerWidget {
                   child: Text(c.name, overflow: TextOverflow.ellipsis),
                 ),
               ),
-              const DropdownMenuItem(
+              DropdownMenuItem(
                 value: '__add__',
                 child: Row(
                   children: [
-                    Icon(Icons.add, size: 16),
-                    SizedBox(width: 8),
-                    Text('Add Connection'),
+                    const Icon(Icons.add, size: 16),
+                    const SizedBox(width: 8),
+                    Text(s.homeAddConnection),
                   ],
                 ),
               ),
@@ -259,7 +262,7 @@ class _ConnectionSelector extends ConsumerWidget {
       error: (e, _) => Padding(
         padding: const EdgeInsets.all(12),
         child: Text(
-          'Error loading connections',
+          '${s.error}: $e',
           style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
         ),
       ),

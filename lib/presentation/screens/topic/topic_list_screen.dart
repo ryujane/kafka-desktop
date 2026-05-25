@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/topic_providers.dart';
 
 /// Screen listing all topics for a given cluster.
@@ -13,12 +14,13 @@ class TopicListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     final topicsAsync = ref.watch(topicListProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Topics'),
+        title: Text(s.topicList),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -40,7 +42,7 @@ class TopicListScreen extends ConsumerWidget {
                     color: theme.disabledColor,
                   ),
                   const SizedBox(height: 16),
-                  Text('No topics found.', style: theme.textTheme.bodyLarge),
+                  Text(s.noData, style: theme.textTheme.bodyLarge),
                 ],
               ),
             );
@@ -53,8 +55,8 @@ class TopicListScreen extends ConsumerWidget {
                 leading: const Icon(Icons.topic_outlined),
                 title: Text(topic.name),
                 subtitle: Text(
-                  'Partitions: ${topic.partitions.length}  |  '
-                  'Internal: ${topic.isInternal}',
+                  '${s.topicPartitions}: ${topic.partitions.length}  |  '
+                  '${s.topicIsInternal}: ${topic.isInternal}',
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
@@ -65,7 +67,7 @@ class TopicListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text('${s.error}: $e')),
       ),
     );
   }

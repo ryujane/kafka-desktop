@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/consumer_group_providers.dart';
 
 /// Screen listing all consumer groups for a given cluster.
@@ -13,12 +14,13 @@ class GroupListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     final groupsAsync = ref.watch(groupListProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Consumer Groups'),
+        title: Text(s.groupList),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -40,10 +42,7 @@ class GroupListScreen extends ConsumerWidget {
                     color: theme.disabledColor,
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    'No consumer groups found.',
-                    style: theme.textTheme.bodyLarge,
-                  ),
+                  Text(s.noData, style: theme.textTheme.bodyLarge),
                 ],
               ),
             );
@@ -56,7 +55,8 @@ class GroupListScreen extends ConsumerWidget {
                 leading: const Icon(Icons.group_outlined),
                 title: Text(group.groupId),
                 subtitle: Text(
-                  'State: ${group.state}  |  Members: ${group.members.length}',
+                  '${s.groupState}: ${group.state}  |  '
+                  '${s.groupMemberCount}: ${group.members.length}',
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
@@ -67,7 +67,7 @@ class GroupListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text('${s.error}: $e')),
       ),
     );
   }

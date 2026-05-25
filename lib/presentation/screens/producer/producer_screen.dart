@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/topic_providers.dart';
 
 /// Screen for producing messages to a Kafka topic.
@@ -32,10 +33,11 @@ class _ProducerScreenState extends ConsumerState<ProducerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final topicsAsync = ref.watch(topicListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Produce Message')),
+      appBar: AppBar(title: Text(s.producerTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Center(
@@ -48,9 +50,9 @@ class _ProducerScreenState extends ConsumerState<ProducerScreen> {
                 topicsAsync.when(
                   data: (topics) => DropdownButtonFormField<String>(
                     initialValue: _selectedTopic,
-                    decoration: const InputDecoration(
-                      labelText: 'Topic',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: s.producerTopic,
+                      border: const OutlineInputBorder(),
                     ),
                     items: topics
                         .map(
@@ -66,7 +68,7 @@ class _ProducerScreenState extends ConsumerState<ProducerScreen> {
                   ),
                   loading: () => const LinearProgressIndicator(),
                   error: (e, _) => Text(
-                    'Error loading topics: $e',
+                    '${s.error}: $e',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                     ),
@@ -76,10 +78,9 @@ class _ProducerScreenState extends ConsumerState<ProducerScreen> {
                 // Partition input.
                 TextField(
                   controller: _partitionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Partition (optional)',
-                    border: OutlineInputBorder(),
-                    hintText: 'Leave empty for automatic partitioning',
+                  decoration: InputDecoration(
+                    labelText: s.producerPartition,
+                    border: const OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
                 ),
@@ -87,18 +88,18 @@ class _ProducerScreenState extends ConsumerState<ProducerScreen> {
                 // Key input.
                 TextField(
                   controller: _keyController,
-                  decoration: const InputDecoration(
-                    labelText: 'Key (optional)',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: s.producerKey,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Value editor.
                 TextField(
                   controller: _valueController,
-                  decoration: const InputDecoration(
-                    labelText: 'Value',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: s.producerValue,
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                   ),
                   maxLines: null,
@@ -108,10 +109,9 @@ class _ProducerScreenState extends ConsumerState<ProducerScreen> {
                 // Headers section.
                 TextField(
                   controller: _headersController,
-                  decoration: const InputDecoration(
-                    labelText: 'Headers (optional, JSON)',
-                    border: OutlineInputBorder(),
-                    hintText: '{"header1": "value1", "header2": "value2"}',
+                  decoration: InputDecoration(
+                    labelText: s.producerHeaders,
+                    border: const OutlineInputBorder(),
                   ),
                   maxLines: 3,
                 ),
@@ -125,13 +125,13 @@ class _ProducerScreenState extends ConsumerState<ProducerScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                'Send not yet implemented for topic: $_selectedTopic',
+                                '${s.producerSend}: $_selectedTopic',
                               ),
                             ),
                           );
                         },
                   icon: const Icon(Icons.send),
-                  label: const Text('Send Message'),
+                  label: Text(s.producerSend),
                 ),
               ],
             ),

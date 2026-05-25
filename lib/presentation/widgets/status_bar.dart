@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/core/theme/theme_extension.dart';
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/connection_providers.dart';
 
 /// Bottom status bar displaying active connection information.
@@ -20,6 +21,7 @@ class StatusBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final colors = Theme.of(context).extension<KafkaXColors>()!;
     final theme = Theme.of(context);
     final activeAsync = ref.watch(activeConnectionProvider);
@@ -47,13 +49,13 @@ class StatusBar extends ConsumerWidget {
           Text(
             activeAsync.value != null
                 ? '${activeAsync.value!.name} (${activeAsync.value!.brokers})'
-                : 'No active connection',
+                : s.statusNoConnection,
             style: theme.textTheme.labelSmall,
           ),
           const Spacer(),
           // Log toggle button.
           Tooltip(
-            message: logPanelExpanded ? 'Hide Logs' : 'Show Logs',
+            message: logPanelExpanded ? s.close : s.logPanelTitle,
             child: InkWell(
               onTap: onLogToggle,
               child: Padding(
@@ -67,7 +69,7 @@ class StatusBar extends ConsumerWidget {
                       color: theme.textTheme.labelSmall?.color,
                     ),
                     const SizedBox(width: 4),
-                    Text('Logs', style: theme.textTheme.labelSmall),
+                    Text(s.logPanelTitle, style: theme.textTheme.labelSmall),
                   ],
                 ),
               ),

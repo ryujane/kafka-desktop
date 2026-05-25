@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:kafkax/l10n/app_localizations.dart';
+
 /// Detailed view of a consumer group with Members, Lag, and Offsets tabs.
 class GroupDetailScreen extends StatelessWidget {
   const GroupDetailScreen({
@@ -16,16 +18,18 @@ class GroupDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(groupId),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Members'),
-              Tab(text: 'Lag'),
-              Tab(text: 'Offsets'),
+              Tab(text: s.groupMembers),
+              Tab(text: s.groupLag),
+              Tab(text: s.groupOffsets),
             ],
           ),
         ),
@@ -49,6 +53,7 @@ class _MembersTabPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return Center(
       child: Column(
@@ -56,10 +61,13 @@ class _MembersTabPlaceholder extends StatelessWidget {
         children: [
           Icon(Icons.people_outline, size: 48, color: theme.disabledColor),
           const SizedBox(height: 16),
-          Text('Members of $groupId', style: theme.textTheme.titleMedium),
+          Text(
+            '${s.groupMembers}: $groupId',
+            style: theme.textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           Text(
-            'Group member details will appear here.',
+            s.noData,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -74,6 +82,7 @@ class _MembersTabPlaceholder extends StatelessWidget {
 class _LagTabPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return Center(
       child: Column(
@@ -81,10 +90,10 @@ class _LagTabPlaceholder extends StatelessWidget {
         children: [
           Icon(Icons.timeline, size: 48, color: theme.disabledColor),
           const SizedBox(height: 16),
-          Text('Consumer Lag', style: theme.textTheme.titleMedium),
+          Text(s.groupLag, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
-            'Lag information per topic-partition will appear here.',
+            s.noData,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -99,6 +108,7 @@ class _LagTabPlaceholder extends StatelessWidget {
 class _OffsetsTabPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final theme = Theme.of(context);
     return Center(
       child: Column(
@@ -106,10 +116,10 @@ class _OffsetsTabPlaceholder extends StatelessWidget {
         children: [
           Icon(Icons.bookmark_outline, size: 48, color: theme.disabledColor),
           const SizedBox(height: 16),
-          Text('Committed Offsets', style: theme.textTheme.titleMedium),
+          Text(s.groupOffsets, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
-            'Offset details per topic-partition will appear here.',
+            s.noData,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/settings_providers.dart';
 
 /// Settings screen with connection management and theme selection.
@@ -9,17 +10,17 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final currentMode = ref.watch(appThemeModeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(s.settingsTitle)),
       body: ListView(
         children: [
           // Connections section.
           ListTile(
             leading: const Icon(Icons.add_circle_outline),
-            title: const Text('Add Connection'),
-            subtitle: const Text('Configure a new Kafka cluster connection'),
+            title: Text(s.settingsAddConnection),
             onTap: () {
               // TODO: Navigate to add connection dialog/screen.
             },
@@ -28,16 +29,25 @@ class SettingsScreen extends ConsumerWidget {
           // Theme section.
           ListTile(
             leading: const Icon(Icons.palette_outlined),
-            title: const Text('Theme'),
-            subtitle: Text(_themeLabel(currentMode)),
+            title: Text(s.settingsTheme),
+            subtitle: Text(_themeLabel(s, currentMode)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<ThemeMode>(
-              segments: const [
-                ButtonSegment(value: ThemeMode.system, label: Text('System')),
-                ButtonSegment(value: ThemeMode.light, label: Text('Light')),
-                ButtonSegment(value: ThemeMode.dark, label: Text('Dark')),
+              segments: [
+                ButtonSegment(
+                  value: ThemeMode.system,
+                  label: Text(s.settingsThemeSystem),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.light,
+                  label: Text(s.settingsThemeLight),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.dark,
+                  label: Text(s.settingsThemeDark),
+                ),
               ],
               selected: {currentMode},
               onSelectionChanged: (modes) {
@@ -52,7 +62,7 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About KafkaX'),
+            title: Text(s.appName),
             subtitle: const Text('Version 1.0.0'),
           ),
         ],
@@ -60,9 +70,9 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  String _themeLabel(ThemeMode mode) => switch (mode) {
-    ThemeMode.system => 'Follow system setting',
-    ThemeMode.light => 'Light mode',
-    ThemeMode.dark => 'Dark mode',
+  String _themeLabel(S s, ThemeMode mode) => switch (mode) {
+    ThemeMode.system => s.settingsThemeSystem,
+    ThemeMode.light => s.settingsThemeLight,
+    ThemeMode.dark => s.settingsThemeDark,
   };
 }

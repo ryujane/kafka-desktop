@@ -146,7 +146,7 @@ packages:
     source: hosted
     version: "1.1.2"
   code_assets:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: code_assets
       sha256: dad6bf6b9f4f378b0a69edbf42584d336efd1a9ce15deb1ba591cbb1b5ff440f
@@ -337,7 +337,7 @@ packages:
     source: hosted
     version: "2.3.2"
   hooks:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: hooks
       sha256: a41af4e8fc687cd6d33de9751eb936c8c0204ebe2bcb6c15ecf707504bf47f31
@@ -488,14 +488,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.6.4"
-  native_assets_cli:
-    dependency: "direct main"
-    description:
-      name: native_assets_cli
-      sha256: "224d3d7eb3fd05ed631a2a19986a2189c009ccda7747f5192096998200d45bfe"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.18.0"
   node_preamble:
     dependency: transitive
     description:

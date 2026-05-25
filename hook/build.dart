@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:native_assets_cli/code_assets.dart';
-import 'package:native_assets_cli/native_assets_cli.dart';
+import 'package:code_assets/code_assets.dart';
+import 'package:hooks/hooks.dart';
 
 void main(List<String> args) async {
   await build(args, (input, output) async {
@@ -28,8 +28,6 @@ void main(List<String> args) async {
         file: libPath,
       ),
     );
-
-    output.addDependencies([libPath]);
   });
 }
 

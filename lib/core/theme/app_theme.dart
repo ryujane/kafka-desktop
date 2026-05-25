@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const _fontFamily = 'NotoSansSC';
+
 abstract final class AppTheme {
   static ThemeData light() => ThemeData(
     colorScheme: ColorScheme.fromSeed(
@@ -7,6 +9,7 @@ abstract final class AppTheme {
       brightness: Brightness.light,
     ),
     useMaterial3: true,
+    fontFamily: _fontFamily,
   );
 
   static ThemeData dark() => ThemeData(
@@ -15,5 +18,6 @@ abstract final class AppTheme {
       brightness: Brightness.dark,
     ),
     useMaterial3: true,
+    fontFamily: _fontFamily,
   );
 }

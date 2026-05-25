@@ -16,7 +16,7 @@ void main(List<String> args) async {
     if (!libFile.existsSync()) {
       throw StateError(
         'librdkafka library not found at ${libFile.path}. '
-        'Place pre-compiled libraries in lib/ffi/third_party/librdkafka/.',
+        'Place pre-compiled libraries in third_party/librdkafka/lib/.',
       );
     }
 
@@ -35,17 +35,23 @@ void main(List<String> args) async {
 
 Uri _resolveLibPath(Uri packageRoot, OS os, Architecture arch) {
   final platformDir = switch (os) {
-    OS.linux => 'linux-x64',
-    OS.macOS => switch (arch) {
-      Architecture.arm64 => 'macos-arm64',
-      _ => 'macos-x64',
+    OS.linux => switch (arch) {
+      Architecture.arm64 => 'linux-arm64',
+      _ => 'linux-x64',
     },
-    OS.windows => 'windows-x64',
+    OS.macOS => switch (arch) {
+      Architecture.arm64 => 'osx-arm64',
+      _ => 'osx-x64',
+    },
+    OS.windows => switch (arch) {
+      Architecture.x64 => 'win-x64',
+      _ => 'win-x86',
+    },
     _ => throw UnsupportedError('Unsupported OS: $os'),
   };
 
   final libName = os.dylibFileName('rdkafka');
   return packageRoot.resolve(
-    'lib/ffi/third_party/librdkafka/$platformDir/$libName',
+    'third_party/librdkafka/lib/$platformDir/native/$libName',
   );
 }

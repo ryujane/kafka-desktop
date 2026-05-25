@@ -6,11 +6,11 @@ llvm-path:
   - '/home/ryujane/.local/llvm'
 headers:
   entry-points:
-    - 'lib/ffi/third_party/librdkafka/include/librdkafka/rdkafka.h'
+    - 'third_party/librdkafka/include/rdkafka.h'
   include-directives:
     - '**rdkafka.h'
 compiler-opts:
-  - '-Ilib/ffi/third_party/librdkafka/include'
+  - '-Ithird_party/librdkafka/include'
   - '-I/usr/lib/gcc/x86_64-linux-gnu/15/include'
 functions:
   include:

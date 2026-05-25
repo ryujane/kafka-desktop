@@ -489,7 +489,7 @@ packages:
     source: hosted
     version: "5.6.4"
   native_assets_cli:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: native_assets_cli
       sha256: "224d3d7eb3fd05ed631a2a19986a2189c009ccda7747f5192096998200d45bfe"

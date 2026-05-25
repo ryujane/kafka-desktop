@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:kafkax/ffi/lib/src/isolate/ffi_isolate.dart';
@@ -15,7 +13,10 @@ void useIsolateMessage<T extends FfiResponse>(
   void Function(T) onMessage,
 ) {
   useEffect(() {
-    final sub = isolate.responses.whereType<T>().listen(onMessage);
+    final sub = isolate.responses
+        .where((e) => e is T)
+        .map((e) => e as T)
+        .listen(onMessage);
     return sub.cancel;
   }, [isolate]);
 }

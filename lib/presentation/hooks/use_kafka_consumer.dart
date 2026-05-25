@@ -26,7 +26,8 @@ Stream<List<KafkaMessage>> useKafkaConsumer(
 
   useEffect(() {
     final sub = isolate.responses
-        .whereType<MessageEvent>()
+        .where((e) => e is MessageEvent)
+        .cast<MessageEvent>()
         .where((e) => e.connectionId == connectionId)
         .listen((event) {
           final messages = event.messages.map((map) {

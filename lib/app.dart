@@ -3,13 +3,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_extension.dart';
+import 'presentation/providers/settings_providers.dart';
+import 'presentation/routes/app_router.dart';
 
 class KafkaXApp extends ConsumerWidget {
   const KafkaXApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
+    final themeMode = ref.watch(appThemeModeProvider);
+
+    return MaterialApp.router(
       title: 'KafkaX',
       theme: AppTheme.light().copyWith(
         extensions: const [
@@ -37,7 +41,8 @@ class KafkaXApp extends ConsumerWidget {
           ),
         ],
       ),
-      home: const Scaffold(body: Center(child: Text('KafkaX'))),
+      themeMode: themeMode,
+      routerConfig: appRouter,
     );
   }
 }

@@ -3,6 +3,10 @@ sealed class FfiRequest {
   FfiRequest(this.connectionId);
 }
 
+class ShutdownRequest extends FfiRequest {
+  ShutdownRequest() : super('_shutdown');
+}
+
 class ConnectRequest extends FfiRequest {
   final String brokers;
   final String? authType;
@@ -25,11 +29,11 @@ class ConnectRequest extends FfiRequest {
 }
 
 class DisconnectRequest extends FfiRequest {
-  DisconnectRequest(String connectionId) : super(connectionId);
+  DisconnectRequest(super.connectionId);
 }
 
 class ListTopicsRequest extends FfiRequest {
-  ListTopicsRequest(String connectionId) : super(connectionId);
+  ListTopicsRequest(super.connectionId);
 }
 
 class CreateTopicRequest extends FfiRequest {
@@ -69,7 +73,7 @@ class ConsumeRequest extends FfiRequest {
 }
 
 class StopConsumeRequest extends FfiRequest {
-  StopConsumeRequest(String connectionId) : super(connectionId);
+  StopConsumeRequest(super.connectionId);
 }
 
 class ProduceRequest extends FfiRequest {
@@ -90,7 +94,7 @@ class ProduceRequest extends FfiRequest {
 }
 
 class ListGroupsRequest extends FfiRequest {
-  ListGroupsRequest(String connectionId) : super(connectionId);
+  ListGroupsRequest(super.connectionId);
 }
 
 class ResetOffsetsRequest extends FfiRequest {

@@ -51,13 +51,16 @@ class _AppShellState extends ConsumerState<AppShell> {
                       ),
                     ),
                   ),
-                  child: Sidebar(
-                    expanded: _sidebarExpanded,
-                    onToggle: () {
-                      setState(() {
-                        _sidebarExpanded = !_sidebarExpanded;
-                      });
-                    },
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Sidebar(
+                      expanded: _sidebarExpanded,
+                      onToggle: () {
+                        setState(() {
+                          _sidebarExpanded = !_sidebarExpanded;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 Expanded(child: widget.child),

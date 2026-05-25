@@ -3,10 +3,6 @@ import 'dart:isolate';
 
 import 'ffi_messages.dart';
 
-class ShutdownRequest extends FfiRequest {
-  ShutdownRequest() : super('_shutdown');
-}
-
 class FfiIsolateManager {
   Isolate? _isolate;
   SendPort? _sendPort;

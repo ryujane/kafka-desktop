@@ -14,6 +14,7 @@ class KafkaXApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(appThemeModeProvider);
+    final locale = ref.watch(appLocaleProvider);
 
     return MaterialApp.router(
       title: 'KafkaX',
@@ -24,6 +25,7 @@ class KafkaXApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.supportedLocales,
+      locale: locale,
       theme: AppTheme.light().copyWith(
         extensions: const [
           KafkaXColors(

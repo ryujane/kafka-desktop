@@ -469,6 +469,30 @@ abstract class S {
   /// **'Dark'**
   String get settingsThemeDark;
 
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLangSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get settingsLangSystem;
+
+  /// No description provided for @settingsLangEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get settingsLangEnglish;
+
+  /// No description provided for @settingsLangChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'中文'**
+  String get settingsLangChinese;
+
   /// No description provided for @connectionName.
   ///
   /// In en, this message translates to:

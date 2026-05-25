@@ -22,7 +22,6 @@ class AppThemeMode extends _$AppThemeMode {
     return _fromString(repo.themeMode);
   }
 
-  /// Updates the theme mode and persists the preference.
   Future<void> setThemeMode(ThemeMode mode) async {
     await ref.read(settingsRepositoryProvider).setThemeMode(_toString(mode));
     state = mode;
@@ -39,4 +38,27 @@ class AppThemeMode extends _$AppThemeMode {
     ThemeMode.dark => 'dark',
     ThemeMode.system => 'system',
   };
+}
+
+/// Manages the application locale preference.
+@Riverpod(keepAlive: true)
+class AppLocale extends _$AppLocale {
+  @override
+  Locale? build() {
+    final repo = ref.watch(settingsRepositoryProvider);
+    return _fromString(repo.locale);
+  }
+
+  Future<void> setLocale(Locale? locale) async {
+    await ref.read(settingsRepositoryProvider).setLocale(_toString(locale));
+    state = locale;
+  }
+
+  static Locale? _fromString(String value) => switch (value) {
+    'en' => const Locale('en'),
+    'zh' => const Locale('zh'),
+    _ => null, // system default
+  };
+
+  static String _toString(Locale? locale) => locale?.languageCode ?? 'system';
 }

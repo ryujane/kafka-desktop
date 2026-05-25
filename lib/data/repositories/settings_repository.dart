@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Read/write access to application-wide settings persisted locally.
 class SettingsRepository {
   static const _themeKey = 'theme_mode';
+  static const _localeKey = 'locale';
   static const _maxMessagesKey = 'max_messages_per_fetch';
   static const _defaultTimeoutKey = 'default_timeout';
 
@@ -14,6 +15,11 @@ class SettingsRepository {
 
   String get themeMode => _prefs.getString(_themeKey) ?? 'system';
   Future<void> setThemeMode(String mode) => _prefs.setString(_themeKey, mode);
+
+  // -- Locale --
+
+  String get locale => _prefs.getString(_localeKey) ?? 'system';
+  Future<void> setLocale(String locale) => _prefs.setString(_localeKey, locale);
 
   // -- Messages --
 

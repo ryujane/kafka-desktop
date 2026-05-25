@@ -195,6 +195,18 @@ class SEn extends S {
   String get settingsThemeDark => 'Dark';
 
   @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLangSystem => 'System';
+
+  @override
+  String get settingsLangEnglish => 'English';
+
+  @override
+  String get settingsLangChinese => '中文';
+
+  @override
   String get connectionName => 'Name';
 
   @override

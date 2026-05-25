@@ -195,6 +195,18 @@ class SZh extends S {
   String get settingsThemeDark => '深色';
 
   @override
+  String get settingsLanguage => '语言';
+
+  @override
+  String get settingsLangSystem => '跟随系统';
+
+  @override
+  String get settingsLangEnglish => 'English';
+
+  @override
+  String get settingsLangChinese => '中文';
+
+  @override
   String get connectionName => '名称';
 
   @override

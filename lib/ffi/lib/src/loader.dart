@@ -3,8 +3,11 @@ import 'dart:io';
 
 /// Loads the librdkafka shared library appropriate for the current platform.
 ///
-/// Resolves the platform-specific library path from the `third_party` directory
-/// and opens it as a [DynamicLibrary].
+/// This is a fallback utility for cases where the `@Native` bindings (which
+/// resolve symbols automatically via native assets) cannot be used. The
+/// generated bindings at `bindings/rd_kafka.dart` use `@ffi.Native` annotations
+/// with `@ffi.DefaultAsset('package:kafkax/kafkax_ffi.dart')` and do not
+/// require manual [DynamicLibrary] loading under normal circumstances.
 DynamicLibrary loadLibRdKafka() {
   final libPath = _resolveLibPath();
   return DynamicLibrary.open(libPath);

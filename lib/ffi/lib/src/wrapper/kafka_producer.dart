@@ -10,15 +10,13 @@ import 'kafka_config.dart';
 /// Ownership of the [KafkaConfig] transfers to this producer on successful
 /// creation. Call [dispose] when the producer is no longer needed.
 class KafkaProducer {
-  late final LibRdKafka bindings;
   Pointer<rd_kafka_t>? _rk;
   bool _disposed = false;
 
-  KafkaProducer(DynamicLibrary dl, KafkaConfig config)
-    : bindings = LibRdKafka(dl) {
+  KafkaProducer(KafkaConfig config) {
     final errBuf = malloc.allocate<Utf8>(512).cast<Utf8>();
     try {
-      _rk = bindings.rd_kafka_new(
+      _rk = rd_kafka_new(
         rd_kafka_type_t.RD_KAFKA_PRODUCER,
         config.nativePtr,
         errBuf.cast(),
@@ -41,7 +39,7 @@ class KafkaProducer {
   /// Returns the number of events served.
   int poll(int timeoutMs) {
     _checkNotDisposed();
-    return bindings.rd_kafka_poll(_rk!, timeoutMs);
+    return rd_kafka_poll(_rk!, timeoutMs);
   }
 
   /// Flushes all outstanding produce requests.
@@ -54,7 +52,7 @@ class KafkaProducer {
   /// was reached before all messages were delivered.
   rd_kafka_resp_err_t flush(int timeoutMs) {
     _checkNotDisposed();
-    return bindings.rd_kafka_flush(_rk!, timeoutMs);
+    return rd_kafka_flush(_rk!, timeoutMs);
   }
 
   /// Produces a message to the given topic and partition.
@@ -94,7 +92,7 @@ class KafkaProducer {
   /// until all outstanding requests are completed.
   void dispose() {
     if (!_disposed && _rk != null) {
-      bindings.rd_kafka_destroy(_rk!);
+      rd_kafka_destroy(_rk!);
       _rk = null;
       _disposed = true;
     }

@@ -1,4 +1,3 @@
-import '../bindings/rd_kafka.dart';
 import 'kafka_producer.dart';
 
 /// Dart-idiomatic wrapper around the native Kafka metadata API.
@@ -7,11 +6,9 @@ import 'kafka_producer.dart';
 /// Kafka cluster.
 class KafkaMetadata {
   // ignore: unused_field - will be used when fetch() is implemented
-  late final LibRdKafka _bindings;
-  // ignore: unused_field - will be used when fetch() is implemented
   final KafkaProducer _producer;
 
-  KafkaMetadata(this._producer) : _bindings = _producer.bindings;
+  KafkaMetadata(this._producer);
 
   /// Fetches metadata from the Kafka cluster.
   ///

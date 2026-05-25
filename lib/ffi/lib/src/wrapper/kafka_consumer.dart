@@ -10,15 +10,13 @@ import 'kafka_config.dart';
 /// Ownership of the [KafkaConfig] transfers to this consumer on successful
 /// creation. Call [dispose] when the consumer is no longer needed.
 class KafkaConsumer {
-  late final LibRdKafka _bindings;
   Pointer<rd_kafka_t>? _rk;
   bool _disposed = false;
 
-  KafkaConsumer(DynamicLibrary dl, KafkaConfig config)
-    : _bindings = LibRdKafka(dl) {
+  KafkaConsumer(KafkaConfig config) {
     final errBuf = malloc.allocate<Utf8>(512).cast<Utf8>();
     try {
-      _rk = _bindings.rd_kafka_new(
+      _rk = rd_kafka_new(
         rd_kafka_type_t.RD_KAFKA_CONSUMER,
         config.nativePtr,
         errBuf.cast(),
@@ -55,7 +53,7 @@ class KafkaConsumer {
   /// Unsubscribes from the current subscription set.
   rd_kafka_resp_err_t unsubscribe() {
     _checkNotDisposed();
-    return _bindings.rd_kafka_unsubscribe(_rk!);
+    return rd_kafka_unsubscribe(_rk!);
   }
 
   /// Consumes a single message from the consumer.
@@ -82,7 +80,7 @@ class KafkaConsumer {
   /// explicitly for finer control.
   rd_kafka_resp_err_t close() {
     _checkNotDisposed();
-    return _bindings.rd_kafka_consumer_close(_rk!);
+    return rd_kafka_consumer_close(_rk!);
   }
 
   void _checkNotDisposed() {
@@ -96,7 +94,7 @@ class KafkaConsumer {
   /// Implicitly calls [rd_kafka_consumer_close] if a group.id was configured.
   void dispose() {
     if (!_disposed && _rk != null) {
-      _bindings.rd_kafka_destroy(_rk!);
+      rd_kafka_destroy(_rk!);
       _rk = null;
       _disposed = true;
     }

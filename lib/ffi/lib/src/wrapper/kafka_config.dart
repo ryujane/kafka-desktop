@@ -10,12 +10,11 @@ import '../bindings/rd_kafka.dart';
 /// Once a config is passed to [KafkaProducer] or [KafkaConsumer], ownership
 /// transfers to the native layer and [dispose] must not be called.
 class KafkaConfig {
-  late final LibRdKafka _bindings;
   late final Pointer<rd_kafka_conf_t> _conf;
   bool _disposed = false;
 
-  KafkaConfig(DynamicLibrary dl) : _bindings = LibRdKafka(dl) {
-    _conf = _bindings.rd_kafka_conf_new();
+  KafkaConfig() {
+    _conf = rd_kafka_conf_new();
   }
 
   /// The underlying native pointer.
@@ -32,7 +31,7 @@ class KafkaConfig {
     final keyPtr = key.toNativeUtf8();
     final valPtr = value.toNativeUtf8();
     try {
-      final result = _bindings.rd_kafka_conf_set(
+      final result = rd_kafka_conf_set(
         _conf,
         keyPtr.cast(),
         valPtr.cast(),
@@ -66,7 +65,7 @@ class KafkaConfig {
   /// on a successful [rd_kafka_new] call.
   void dispose() {
     if (!_disposed) {
-      _bindings.rd_kafka_conf_destroy(_conf);
+      rd_kafka_conf_destroy(_conf);
       _disposed = true;
     }
   }

@@ -1,4 +1,3 @@
-import '../bindings/rd_kafka.dart';
 import 'kafka_producer.dart';
 
 /// Dart-idiomatic wrapper around the native Kafka admin API.
@@ -8,11 +7,9 @@ import 'kafka_producer.dart';
 /// admin tasks like creating and deleting topics.
 class KafkaAdmin {
   // ignore: unused_field - will be used when admin methods are implemented
-  late final LibRdKafka _bindings;
-  // ignore: unused_field - will be used when admin methods are implemented
   final KafkaProducer _producer;
 
-  KafkaAdmin(this._producer) : _bindings = _producer.bindings;
+  KafkaAdmin(this._producer);
 
   /// Creates one or more topics in the Kafka cluster.
   ///

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 /// native_assets_cli build script
 ///
 /// This script tells the Dart build system which native assets to bundle.

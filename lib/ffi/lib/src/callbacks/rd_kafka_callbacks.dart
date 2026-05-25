@@ -42,7 +42,8 @@ class KafkaCallbacks {
   }
 
   void _handleLog(Pointer rk, int level, Pointer<Utf8> fac, Pointer<Utf8> buf) {
-    // Will be connected to sendPort in isolate implementation
+    // ignore: unused_element
+    _sendPort; // Will be used in isolate implementation
   }
 
   void _handleStats(
@@ -52,11 +53,11 @@ class KafkaCallbacks {
     Pointer<Utf8> buf,
     int ts,
   ) {
-    // Will be connected to sendPort in isolate implementation
+    _sendPort; // Will be used in isolate implementation
   }
 
   void _handleDeliveryReport(Pointer rk, Pointer msg, Pointer opaque) {
-    // Will be connected to sendPort in isolate implementation
+    _sendPort; // Will be used in isolate implementation
   }
 
   /// Closes all native callables. Must be called when done to prevent leaks.

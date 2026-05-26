@@ -64,11 +64,13 @@ final connectionRepositoryProvider = ConnectionRepositoryProvider._();
 final class ConnectionRepositoryProvider
     extends
         $FunctionalProvider<
+          AsyncValue<ConnectionRepository>,
           ConnectionRepository,
-          ConnectionRepository,
-          ConnectionRepository
+          FutureOr<ConnectionRepository>
         >
-    with $Provider<ConnectionRepository> {
+    with
+        $FutureModifier<ConnectionRepository>,
+        $FutureProvider<ConnectionRepository> {
   /// Provides the [ConnectionRepository] instance.
   ConnectionRepositoryProvider._()
     : super(
@@ -86,26 +88,18 @@ final class ConnectionRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<ConnectionRepository> $createElement(
+  $FutureProviderElement<ConnectionRepository> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  ConnectionRepository create(Ref ref) {
+  FutureOr<ConnectionRepository> create(Ref ref) {
     return connectionRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ConnectionRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ConnectionRepository>(value),
-    );
   }
 }
 
 String _$connectionRepositoryHash() =>
-    r'8c54e42d8d09f157a703d6a45f811c1e3a8704df';
+    r'0c1cff0dc8df7c9ac1ed3bd75c911200e186c85d';
 
 /// Provides the [FfiIsolateManager] singleton.
 
@@ -169,11 +163,13 @@ final connectionManagerProvider = ConnectionManagerProvider._();
 final class ConnectionManagerProvider
     extends
         $FunctionalProvider<
+          AsyncValue<ConnectionManager>,
           ConnectionManager,
-          ConnectionManager,
-          ConnectionManager
+          FutureOr<ConnectionManager>
         >
-    with $Provider<ConnectionManager> {
+    with
+        $FutureModifier<ConnectionManager>,
+        $FutureProvider<ConnectionManager> {
   /// Provides the [ConnectionManager] instance.
   ConnectionManagerProvider._()
     : super(
@@ -191,25 +187,17 @@ final class ConnectionManagerProvider
 
   @$internal
   @override
-  $ProviderElement<ConnectionManager> $createElement(
+  $FutureProviderElement<ConnectionManager> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  ConnectionManager create(Ref ref) {
+  FutureOr<ConnectionManager> create(Ref ref) {
     return connectionManager(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ConnectionManager value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ConnectionManager>(value),
-    );
   }
 }
 
-String _$connectionManagerHash() => r'40f6d5cb5e7c323932115a0cd75899e3b29ababe';
+String _$connectionManagerHash() => r'd910775c304f0fddb5686f651ed2ee436b037673';
 
 /// Manages the list of all saved connections.
 
@@ -239,7 +227,7 @@ final class ConnectionListProvider
   ConnectionList create() => ConnectionList();
 }
 
-String _$connectionListHash() => r'a524fff28f4b99dca86f873097dc5f61828be7ce';
+String _$connectionListHash() => r'49b6ef0a0fbd9fdc5cbafd284585dc0be3d548dd';
 
 /// Manages the list of all saved connections.
 
@@ -294,7 +282,7 @@ final class ActiveConnectionProvider
   ActiveConnection create() => ActiveConnection();
 }
 
-String _$activeConnectionHash() => r'322eb4b3b7062a6a2d259ac9b46ce8db701d8840';
+String _$activeConnectionHash() => r'c623ee2627a1c8300f20355f4c6060e04e3e6f60';
 
 /// Manages the currently active (connected) connection.
 

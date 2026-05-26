@@ -18,11 +18,13 @@ final settingsRepositoryProvider = SettingsRepositoryProvider._();
 final class SettingsRepositoryProvider
     extends
         $FunctionalProvider<
+          AsyncValue<SettingsRepository>,
           SettingsRepository,
-          SettingsRepository,
-          SettingsRepository
+          FutureOr<SettingsRepository>
         >
-    with $Provider<SettingsRepository> {
+    with
+        $FutureModifier<SettingsRepository>,
+        $FutureProvider<SettingsRepository> {
   /// Provides the [SettingsRepository] instance.
   SettingsRepositoryProvider._()
     : super(
@@ -40,26 +42,18 @@ final class SettingsRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<SettingsRepository> $createElement(
+  $FutureProviderElement<SettingsRepository> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  SettingsRepository create(Ref ref) {
+  FutureOr<SettingsRepository> create(Ref ref) {
     return settingsRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(SettingsRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<SettingsRepository>(value),
-    );
   }
 }
 
 String _$settingsRepositoryHash() =>
-    r'02bf8401c2dfd788c76e465b8e8084ceb2ecae98';
+    r'd54d25ded34b5653a1c965bd3cd0f1a904bd0116';
 
 /// Manages the application theme mode preference.
 
@@ -97,7 +91,7 @@ final class AppThemeModeProvider
   }
 }
 
-String _$appThemeModeHash() => r'47d7ec5e8a60304a17043ed8100cd90f6141c485';
+String _$appThemeModeHash() => r'ad76f73bcfb74b4f155abde252f0de3cf1701bf7';
 
 /// Manages the application theme mode preference.
 
@@ -154,7 +148,7 @@ final class AppLocaleProvider extends $NotifierProvider<AppLocale, Locale?> {
   }
 }
 
-String _$appLocaleHash() => r'9adea07a37e77134d9054fe40a7138ad097576af';
+String _$appLocaleHash() => r'274e6878fcb378837bac679c8ebfb995ae3ff9ed';
 
 /// Manages the application locale preference.
 

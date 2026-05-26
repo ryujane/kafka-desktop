@@ -8,8 +8,8 @@ part 'settings_providers.g.dart';
 
 /// Provides the [SettingsRepository] instance.
 @Riverpod(keepAlive: true)
-SettingsRepository settingsRepository(Ref ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).requireValue;
+Future<SettingsRepository> settingsRepository(Ref ref) async {
+  final prefs = await ref.watch(sharedPreferencesProvider.future);
   return SettingsRepository(prefs);
 }
 
@@ -18,12 +18,14 @@ SettingsRepository settingsRepository(Ref ref) {
 class AppThemeMode extends _$AppThemeMode {
   @override
   ThemeMode build() {
-    final repo = ref.watch(settingsRepositoryProvider);
-    return _fromString(repo.themeMode);
+    final asyncRepo = ref.watch(settingsRepositoryProvider);
+    if (!asyncRepo.hasValue) return ThemeMode.system;
+    return _fromString(asyncRepo.requireValue.themeMode);
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
-    await ref.read(settingsRepositoryProvider).setThemeMode(_toString(mode));
+    final repo = await ref.read(settingsRepositoryProvider.future);
+    await repo.setThemeMode(_toString(mode));
     state = mode;
   }
 
@@ -45,12 +47,14 @@ class AppThemeMode extends _$AppThemeMode {
 class AppLocale extends _$AppLocale {
   @override
   Locale? build() {
-    final repo = ref.watch(settingsRepositoryProvider);
-    return _fromString(repo.locale);
+    final asyncRepo = ref.watch(settingsRepositoryProvider);
+    if (!asyncRepo.hasValue) return null;
+    return _fromString(asyncRepo.requireValue.locale);
   }
 
   Future<void> setLocale(Locale? locale) async {
-    await ref.read(settingsRepositoryProvider).setLocale(_toString(locale));
+    final repo = await ref.read(settingsRepositoryProvider.future);
+    await repo.setLocale(_toString(locale));
     state = locale;
   }
 

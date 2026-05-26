@@ -117,11 +117,14 @@ class Sidebar extends ConsumerWidget {
             ),
             if (expanded) ...[
               const SizedBox(width: 8),
-              Text(
-                s.appName,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              Expanded(
+                child: Text(
+                  s.appName,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ],

@@ -17,12 +17,9 @@ Future<SharedPreferences> sharedPreferences(Ref ref) =>
 
 /// Provides the [ConnectionRepository] instance.
 @Riverpod(keepAlive: true)
-ConnectionRepository connectionRepository(Ref ref) {
-  final asyncPrefs = ref.watch(sharedPreferencesProvider);
-  if (!asyncPrefs.hasValue) {
-    throw Exception('SharedPreferences not ready');
-  }
-  return ConnectionRepository(asyncPrefs.requireValue);
+Future<ConnectionRepository> connectionRepository(Ref ref) async {
+  final prefs = await ref.watch(sharedPreferencesProvider.future);
+  return ConnectionRepository(prefs);
 }
 
 /// Provides the [FfiIsolateManager] singleton.
@@ -31,8 +28,8 @@ FfiIsolateManager ffiIsolateManager(Ref ref) => FfiIsolateManager();
 
 /// Provides the [ConnectionManager] instance.
 @Riverpod(keepAlive: true)
-ConnectionManager connectionManager(Ref ref) {
-  final repository = ref.watch(connectionRepositoryProvider);
+Future<ConnectionManager> connectionManager(Ref ref) async {
+  final repository = await ref.watch(connectionRepositoryProvider.future);
   final isolateManager = ref.watch(ffiIsolateManagerProvider);
   final manager = ConnectionManager(
     repository: repository,
@@ -46,18 +43,22 @@ ConnectionManager connectionManager(Ref ref) {
 @Riverpod(keepAlive: true)
 class ConnectionList extends _$ConnectionList {
   @override
-  Future<List<ConnectionConfig>> build() =>
-      ref.watch(connectionManagerProvider).loadAll();
+  Future<List<ConnectionConfig>> build() async {
+    final manager = await ref.watch(connectionManagerProvider.future);
+    return manager.loadAll();
+  }
 
   /// Saves (inserts or updates) a connection config and refreshes the list.
   Future<void> save(ConnectionConfig config) async {
-    await ref.read(connectionManagerProvider).save(config);
+    final manager = await ref.read(connectionManagerProvider.future);
+    await manager.save(config);
     ref.invalidateSelf();
   }
 
   /// Deletes a connection by [id] and refreshes the list.
   Future<void> delete(String id) async {
-    await ref.read(connectionManagerProvider).delete(id);
+    final manager = await ref.read(connectionManagerProvider.future);
+    await manager.delete(id);
     ref.invalidateSelf();
   }
 }
@@ -69,7 +70,7 @@ class ActiveConnection extends _$ActiveConnection {
 
   @override
   Future<ConnectionConfig?> build() async {
-    final manager = ref.watch(connectionManagerProvider);
+    final manager = await ref.watch(connectionManagerProvider.future);
     _subscription?.cancel();
     _subscription = manager.onActiveChanged.listen((_) {
       ref.invalidateSelf();
@@ -82,7 +83,8 @@ class ActiveConnection extends _$ActiveConnection {
   Future<void> connect(ConnectionConfig config) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(connectionManagerProvider).connect(config);
+      final manager = await ref.read(connectionManagerProvider.future);
+      await manager.connect(config);
       return config;
     });
   }
@@ -91,7 +93,8 @@ class ActiveConnection extends _$ActiveConnection {
   Future<void> disconnect() async {
     final current = state.value;
     if (current == null) return;
-    await ref.read(connectionManagerProvider).disconnect(current.id);
+    final manager = await ref.read(connectionManagerProvider.future);
+    await manager.disconnect(current.id);
     state = const AsyncData(null);
   }
 }

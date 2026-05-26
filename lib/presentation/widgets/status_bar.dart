@@ -7,17 +7,7 @@ import 'package:kafkax/presentation/providers/connection_providers.dart';
 
 /// Bottom status bar displaying active connection information.
 class StatusBar extends ConsumerWidget {
-  const StatusBar({
-    required this.onLogToggle,
-    required this.logPanelExpanded,
-    super.key,
-  });
-
-  /// Callback to toggle the log panel visibility.
-  final VoidCallback onLogToggle;
-
-  /// Whether the log panel is currently expanded.
-  final bool logPanelExpanded;
+  const StatusBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +27,6 @@ class StatusBar extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          // Connection status indicator.
           Icon(
             Icons.circle,
             size: 8,
@@ -51,29 +40,6 @@ class StatusBar extends ConsumerWidget {
                 ? '${activeAsync.value!.name} (${activeAsync.value!.brokers})'
                 : s.statusNoConnection,
             style: theme.textTheme.labelSmall,
-          ),
-          const Spacer(),
-          // Log toggle button.
-          Tooltip(
-            message: logPanelExpanded ? s.close : s.logPanelTitle,
-            child: InkWell(
-              onTap: onLogToggle,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.terminal,
-                      size: 14,
-                      color: theme.textTheme.labelSmall?.color,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(s.logPanelTitle, style: theme.textTheme.labelSmall),
-                  ],
-                ),
-              ),
-            ),
           ),
         ],
       ),

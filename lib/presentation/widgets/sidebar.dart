@@ -1,113 +1,126 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/data/models/connection_config.dart';
 import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/connection_providers.dart';
+import 'package:kafkax/presentation/providers/navigation_providers.dart';
+
+const _kExpandedThreshold = 200.0;
 
 /// Collapsible sidebar with connection selector and navigation links.
 class Sidebar extends ConsumerWidget {
-  const Sidebar({required this.expanded, required this.onToggle, super.key});
-
-  /// Whether the sidebar is in expanded state.
-  final bool expanded;
+  const Sidebar({required this.onToggle, super.key});
 
   /// Callback when the collapse/expand toggle is pressed.
   final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context)!;
-    final connectionsAsync = ref.watch(connectionListProvider);
-    final activeAsync = ref.watch(activeConnectionProvider);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final expanded = constraints.maxWidth >= _kExpandedThreshold;
+        final s = S.of(context)!;
+        final connectionsAsync = ref.watch(connectionListProvider);
+        final activeAsync = ref.watch(activeConnectionProvider);
 
-    return Column(
-      children: [
-        _buildHeader(context, s),
-        const Divider(height: 1),
-        if (expanded) ...[
-          _ConnectionSelector(
-            connectionsAsync: connectionsAsync,
-            activeAsync: activeAsync,
-          ),
-          const Divider(height: 1),
-        ],
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (expanded)
-                  _NavSection(
-                    title: s.sidebarDevelopment,
-                    items: [
-                      _NavItem(
+        return Column(
+          children: [
+            _buildHeader(context, s, expanded),
+            const Divider(height: 1),
+            if (expanded) ...[
+              _ConnectionSelector(
+                connectionsAsync: connectionsAsync,
+                activeAsync: activeAsync,
+              ),
+              const Divider(height: 1),
+            ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (expanded)
+                      _NavSection(
+                        title: s.sidebarDevelopment,
+                        items: [
+                          _NavItem(
+                            icon: Icons.topic_outlined,
+                            label: s.sidebarTopics,
+                            onTap: () =>
+                                _navigateToTopics(ref, activeAsync),
+                          ),
+                          _NavItem(
+                            icon: Icons.group_outlined,
+                            label: s.sidebarGroups,
+                            onTap: () =>
+                                _navigateToGroups(ref, activeAsync),
+                          ),
+                          _NavItem(
+                            icon: Icons.send_outlined,
+                            label: s.sidebarProduce,
+                            onTap: () =>
+                                _navigateToProduce(ref, activeAsync),
+                          ),
+                        ],
+                      ),
+                    if (expanded)
+                      _NavSection(
+                        title: s.sidebarAdmin,
+                        items: [
+                          _NavItem(
+                            icon: Icons.dns_outlined,
+                            label: s.sidebarBrokers,
+                            onTap: () =>
+                                _navigateToCluster(ref, activeAsync),
+                          ),
+                        ],
+                      ),
+                    if (!expanded) ...[
+                      const SizedBox(height: 8),
+                      _IconNavItem(
                         icon: Icons.topic_outlined,
-                        label: s.sidebarTopics,
-                        onTap: () => _navigateToTopics(context, activeAsync),
+                        tooltip: s.sidebarTopics,
+                        onTap: () =>
+                            _navigateToTopics(ref, activeAsync),
                       ),
-                      _NavItem(
+                      _IconNavItem(
                         icon: Icons.group_outlined,
-                        label: s.sidebarGroups,
-                        onTap: () => _navigateToGroups(context, activeAsync),
+                        tooltip: s.sidebarGroups,
+                        onTap: () =>
+                            _navigateToGroups(ref, activeAsync),
                       ),
-                      _NavItem(
+                      _IconNavItem(
                         icon: Icons.send_outlined,
-                        label: s.sidebarProduce,
-                        onTap: () => _navigateToProduce(context, activeAsync),
+                        tooltip: s.sidebarProduce,
+                        onTap: () =>
+                            _navigateToProduce(ref, activeAsync),
                       ),
-                    ],
-                  ),
-                if (expanded)
-                  _NavSection(
-                    title: s.sidebarAdmin,
-                    items: [
-                      _NavItem(
+                      _IconNavItem(
                         icon: Icons.dns_outlined,
-                        label: s.sidebarBrokers,
-                        onTap: () => _navigateToCluster(context, activeAsync),
+                        tooltip: s.sidebarBrokers,
+                        onTap: () =>
+                            _navigateToCluster(ref, activeAsync),
                       ),
                     ],
-                  ),
-                if (!expanded) ...[
-                  const SizedBox(height: 8),
-                  _IconNavItem(
-                    icon: Icons.topic_outlined,
-                    tooltip: s.sidebarTopics,
-                    onTap: () => _navigateToTopics(context, activeAsync),
-                  ),
-                  _IconNavItem(
-                    icon: Icons.group_outlined,
-                    tooltip: s.sidebarGroups,
-                    onTap: () => _navigateToGroups(context, activeAsync),
-                  ),
-                  _IconNavItem(
-                    icon: Icons.send_outlined,
-                    tooltip: s.sidebarProduce,
-                    onTap: () => _navigateToProduce(context, activeAsync),
-                  ),
-                  _IconNavItem(
-                    icon: Icons.dns_outlined,
-                    tooltip: s.sidebarBrokers,
-                    onTap: () => _navigateToCluster(context, activeAsync),
-                  ),
-                ],
-              ],
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-        const Divider(height: 1),
-        _buildSettingsButton(context, s),
-      ],
+            const Divider(height: 1),
+            _buildLogsButton(context, s, ref, expanded),
+            _buildSettingsButton(context, s, ref, expanded),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildHeader(BuildContext context, S s) {
+  Widget _buildHeader(BuildContext context, S s, bool expanded) {
     return SizedBox(
       height: 48,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.symmetric(horizontal: expanded ? 8 : 4),
         child: Row(
           children: [
             IconButton(
@@ -120,9 +133,10 @@ class Sidebar extends ConsumerWidget {
               Expanded(
                 child: Text(
                   s.appName,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -133,61 +147,79 @@ class Sidebar extends ConsumerWidget {
     );
   }
 
-  Widget _buildSettingsButton(BuildContext context, S s) {
+  Widget _buildLogsButton(
+    BuildContext context,
+    S s,
+    WidgetRef ref,
+    bool expanded,
+  ) {
+    final nav = ref.read(navigationProvider.notifier);
+    if (expanded) {
+      return ListTile(
+        leading: const Icon(Icons.article_outlined),
+        title: Text(s.sidebarLogs),
+        dense: true,
+        onTap: () => nav.go(const NavLogs()),
+      );
+    }
+    return Tooltip(
+      message: s.sidebarLogs,
+      child: IconButton(
+        icon: const Icon(Icons.article_outlined),
+        onPressed: () => nav.go(const NavLogs()),
+      ),
+    );
+  }
+
+  Widget _buildSettingsButton(
+    BuildContext context,
+    S s,
+    WidgetRef ref,
+    bool expanded,
+  ) {
+    final nav = ref.read(navigationProvider.notifier);
     if (expanded) {
       return ListTile(
         leading: const Icon(Icons.settings_outlined),
         title: Text(s.sidebarSettings),
         dense: true,
-        onTap: () => context.go('/settings'),
+        onTap: () => nav.go(const NavSettings()),
       );
     }
     return Tooltip(
       message: s.sidebarSettings,
       child: IconButton(
         icon: const Icon(Icons.settings_outlined),
-        onPressed: () => context.go('/settings'),
+        onPressed: () => nav.go(const NavSettings()),
       ),
     );
   }
 
-  void _navigateToTopics(
-    BuildContext context,
-    AsyncValue<ConnectionConfig?> active,
-  ) {
+  void _navigateToTopics(WidgetRef ref, AsyncValue<ConnectionConfig?> active) {
     final id = active.value?.id;
     if (id != null) {
-      context.go('/cluster/$id/topics');
+      ref.read(navigationProvider.notifier).go(NavTopics(clusterId: id));
     }
   }
 
-  void _navigateToGroups(
-    BuildContext context,
-    AsyncValue<ConnectionConfig?> active,
-  ) {
+  void _navigateToGroups(WidgetRef ref, AsyncValue<ConnectionConfig?> active) {
     final id = active.value?.id;
     if (id != null) {
-      context.go('/cluster/$id/groups');
+      ref.read(navigationProvider.notifier).go(NavGroups(clusterId: id));
     }
   }
 
-  void _navigateToProduce(
-    BuildContext context,
-    AsyncValue<ConnectionConfig?> active,
-  ) {
+  void _navigateToProduce(WidgetRef ref, AsyncValue<ConnectionConfig?> active) {
     final id = active.value?.id;
     if (id != null) {
-      context.go('/cluster/$id/produce');
+      ref.read(navigationProvider.notifier).go(NavProduce(clusterId: id));
     }
   }
 
-  void _navigateToCluster(
-    BuildContext context,
-    AsyncValue<ConnectionConfig?> active,
-  ) {
+  void _navigateToCluster(WidgetRef ref, AsyncValue<ConnectionConfig?> active) {
     final id = active.value?.id;
     if (id != null) {
-      context.go('/cluster/$id');
+      ref.read(navigationProvider.notifier).go(NavCluster(clusterId: id));
     }
   }
 }
@@ -242,7 +274,6 @@ class _ConnectionSelector extends ConsumerWidget {
                 return;
               }
               if (active?.id == value) return;
-              // Disconnect current, then connect to selected.
               if (active != null) {
                 await ref.read(activeConnectionProvider.notifier).disconnect();
               }

@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/core/theme/theme_extension.dart';
+import 'package:kafkax/presentation/providers/navigation_providers.dart';
+import 'package:kafkax/presentation/screens/cluster/cluster_screen.dart';
+import 'package:kafkax/presentation/screens/consumer_group/group_detail_screen.dart';
+import 'package:kafkax/presentation/screens/consumer_group/group_list_screen.dart';
+import 'package:kafkax/presentation/screens/home/home_screen.dart';
+import 'package:kafkax/presentation/screens/log/log_screen.dart';
+import 'package:kafkax/presentation/screens/producer/producer_screen.dart';
+import 'package:kafkax/presentation/screens/settings/settings_screen.dart';
+import 'package:kafkax/presentation/screens/topic/topic_detail_screen.dart';
+import 'package:kafkax/presentation/screens/topic/topic_list_screen.dart';
 import 'package:kafkax/presentation/widgets/sidebar.dart';
 import 'package:kafkax/presentation/widgets/status_bar.dart';
-import 'package:kafkax/presentation/panels/log_panel.dart';
 
-/// Main application shell containing sidebar, content area, log panel,
-/// and status bar.
+/// Main application shell containing sidebar, content area, and status bar.
 class AppShell extends ConsumerStatefulWidget {
-  const AppShell({required this.child, super.key});
-
-  /// The routed screen widget to display in the content area.
-  final Widget child;
+  const AppShell({super.key});
 
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
@@ -20,12 +25,12 @@ class AppShell extends ConsumerStatefulWidget {
 
 class _AppShellState extends ConsumerState<AppShell> {
   bool _sidebarExpanded = true;
-  bool _logPanelExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<KafkaXColors>()!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final target = ref.watch(navigationProvider);
 
     return Scaffold(
       body: Column(
@@ -54,7 +59,6 @@ class _AppShellState extends ConsumerState<AppShell> {
                   child: Material(
                     color: Colors.transparent,
                     child: Sidebar(
-                      expanded: _sidebarExpanded,
                       onToggle: () {
                         setState(() {
                           _sidebarExpanded = !_sidebarExpanded;
@@ -63,28 +67,31 @@ class _AppShellState extends ConsumerState<AppShell> {
                     ),
                   ),
                 ),
-                Expanded(child: widget.child),
+                Expanded(child: _buildContent(target)),
               ],
             ),
           ),
-          LogPanel(
-            expanded: _logPanelExpanded,
-            onToggle: () {
-              setState(() {
-                _logPanelExpanded = !_logPanelExpanded;
-              });
-            },
-          ),
-          StatusBar(
-            onLogToggle: () {
-              setState(() {
-                _logPanelExpanded = !_logPanelExpanded;
-              });
-            },
-            logPanelExpanded: _logPanelExpanded,
-          ),
+          const StatusBar(),
         ],
       ),
     );
   }
+
+  Widget _buildContent(NavTarget target) => switch (target) {
+    NavHome() => const HomeScreen(),
+    NavCluster(:final clusterId) => ClusterScreen(clusterId: clusterId),
+    NavTopics(:final clusterId) => TopicListScreen(clusterId: clusterId),
+    NavTopicDetail(:final clusterId, :final topicName) => TopicDetailScreen(
+      clusterId: clusterId,
+      topicName: topicName,
+    ),
+    NavProduce(:final clusterId) => ProducerScreen(clusterId: clusterId),
+    NavGroups(:final clusterId) => GroupListScreen(clusterId: clusterId),
+    NavGroupDetail(:final clusterId, :final groupId) => GroupDetailScreen(
+      clusterId: clusterId,
+      groupId: groupId,
+    ),
+    NavLogs() => const LogScreen(),
+    NavSettings() => const SettingsScreen(),
+  };
 }

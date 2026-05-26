@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/consumer_group_providers.dart';
+import 'package:kafkax/presentation/providers/navigation_providers.dart';
 
 /// Screen listing all consumer groups for a given cluster.
 class GroupListScreen extends ConsumerWidget {
@@ -60,7 +60,12 @@ class GroupListScreen extends ConsumerWidget {
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  context.go('/cluster/$clusterId/groups/${group.groupId}');
+                  ref.read(navigationProvider.notifier).go(
+                    NavGroupDetail(
+                      clusterId: clusterId,
+                      groupId: group.groupId,
+                    ),
+                  );
                 },
               );
             },

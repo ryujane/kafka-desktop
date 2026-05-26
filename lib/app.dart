@@ -6,7 +6,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_extension.dart';
 import 'l10n/app_localizations.dart';
 import 'presentation/providers/settings_providers.dart';
-import 'presentation/routes/app_router.dart';
+import 'presentation/widgets/app_shell.dart';
 
 class KafkaXApp extends ConsumerWidget {
   const KafkaXApp({super.key});
@@ -16,7 +16,7 @@ class KafkaXApp extends ConsumerWidget {
     final themeMode = ref.watch(appThemeModeProvider);
     final locale = ref.watch(appLocaleProvider);
 
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'KafkaX',
       localizationsDelegates: const [
         S.delegate,
@@ -53,7 +53,7 @@ class KafkaXApp extends ConsumerWidget {
         ],
       ),
       themeMode: themeMode,
-      routerConfig: appRouter,
+      home: const AppShell(),
     );
   }
 }

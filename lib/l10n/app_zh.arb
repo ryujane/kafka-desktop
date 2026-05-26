@@ -11,6 +11,7 @@
   "sidebarProduce": "生产消息",
   "sidebarBrokers": "Broker",
   "sidebarSettings": "设置",
+  "sidebarLogs": "日志",
   "sidebarSelectCluster": "选择集群",
   "statusNoConnection": "未连接",
   "logPanelTitle": "日志",

@@ -163,6 +163,12 @@ abstract class S {
   /// **'Settings'**
   String get sidebarSettings;
 
+  /// No description provided for @sidebarLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs'**
+  String get sidebarLogs;
+
   /// No description provided for @sidebarSelectCluster.
   ///
   /// In en, this message translates to:

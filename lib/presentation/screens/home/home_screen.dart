@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kafkax/data/models/connection_config.dart';
 import 'package:kafkax/l10n/app_localizations.dart';
 import 'package:kafkax/presentation/providers/connection_providers.dart';
+import 'package:kafkax/presentation/providers/navigation_providers.dart';
 
 /// Home screen showing KafkaX branding and saved connections.
 class HomeScreen extends ConsumerWidget {
@@ -136,7 +136,9 @@ class _ConnectionTile extends ConsumerWidget {
                       .read(activeConnectionProvider.notifier)
                       .connect(connection);
                   if (context.mounted) {
-                    context.go('/cluster/${connection.id}');
+                    ref.read(navigationProvider.notifier).go(
+                      NavCluster(clusterId: connection.id),
+                    );
                   }
                 },
                 child: Text(s.connectionConnect),

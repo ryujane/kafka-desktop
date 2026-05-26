@@ -42,6 +42,9 @@ class SEn extends S {
   String get sidebarSettings => 'Settings';
 
   @override
+  String get sidebarLogs => 'Logs';
+
+  @override
   String get sidebarSelectCluster => 'Select Cluster';
 
   @override

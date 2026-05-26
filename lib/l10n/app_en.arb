@@ -11,6 +11,7 @@
   "sidebarProduce": "Produce",
   "sidebarBrokers": "Brokers",
   "sidebarSettings": "Settings",
+  "sidebarLogs": "Logs",
   "sidebarSelectCluster": "Select Cluster",
   "statusNoConnection": "No Connection",
   "logPanelTitle": "Logs",

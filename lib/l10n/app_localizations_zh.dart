@@ -42,6 +42,9 @@ class SZh extends S {
   String get sidebarSettings => '设置';
 
   @override
+  String get sidebarLogs => '日志';
+
+  @override
   String get sidebarSelectCluster => '选择集群';
 
   @override
